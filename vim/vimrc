@@ -62,12 +62,6 @@ map <leader>tf :tabfirst<cr>
 map <leader>tl :tablast<cr>
 map <leader>tm :tabmove
 
-" auto closing pairs mappings
-:imap ( ()<left>
-:imap { {}<left>
-:imap [ []<left>
-
-
 " Uncomment to use Jamis Buck's file opening plugin
 "map <Leader>t :FuzzyFinderTextMate<Enter>
 
