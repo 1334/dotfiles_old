@@ -1,10 +1,8 @@
 # Install plugins as submodules
-(using vim-rails as an example)
-
 cd ~/bin/dotfiles
-git submodule add https://github.com/tpope/vim-rails.git vim/bundle/rails
+git submodule add https://github.com/user/plugin_name.git vim/bundle/plugin_name
 git add .
-git commit -m "Install Tim Pope's rails vim bundle as a submodule"
+git commit -m "Install vim bundle as a submodule"
 
 # Install dotfiles environment
 cd ~/bin
