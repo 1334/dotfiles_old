@@ -1,0 +1,36 @@
+[submodule "vim/bundle/auto-pairs"]
+	path = vim/bundle/auto-pairs
+	url = https://github.com/vim-scripts/Auto-Pairs.git
+[submodule "vim/bundle/snipmate"]
+	path = vim/bundle/snipmate
+	url = https://github.com/garbas/vim-snipmate.git
+[submodule "vim/bundle/tlib"]
+	path = vim/bundle/tlib
+	url = https://github.com/tomtom/tlib_vim.git
+[submodule "vim/bundle/mw-utils"]
+	path = vim/bundle/mw-utils
+	url = https://github.com/MarcWeber/vim-addon-mw-utils.git
+[submodule "vim/bundle/snipmate-snippets"]
+	path = vim/bundle/snipmate-snippets
+	url = https://github.com/honza/snipmate-snippets.git
+[submodule "vim/bundle/tcomment"]
+	path = vim/bundle/tcomment
+	url = https://github.com/tomtom/tcomment_vim.git
+[submodule "vim/bundle/endwise"]
+	path = vim/bundle/endwise
+	url = https://github.com/tpope/vim-endwise.git
+[submodule "vim/bundle/fugitive"]
+	path = vim/bundle/fugitive
+	url = https://github.com/tpope/vim-fugitive.git
+[submodule "vim/bundle/rails"]
+	path = vim/bundle/rails
+	url = https://github.com/tpope/vim-rails.git
+[submodule "vim/bundle/ragtag"]
+	path = vim/bundle/ragtag
+	url = https://github.com/tpope/vim-ragtag.git
+[submodule "vim/bundle/surround"]
+	path = vim/bundle/surround
+	url = https://github.com/tpope/vim-surround.git
+[submodule "vim/bundle/unimpaired"]
+	path = vim/bundle/unimpaired
+	url = https://github.com/tpope/vim-unimpaired.git
