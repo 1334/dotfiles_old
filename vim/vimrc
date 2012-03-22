@@ -49,6 +49,8 @@ set statusline=[%n]\ %<%.99f\ %h%w%m%r%y\ %{exists('*CapsLockStatusline')?CapsLo
 " Or use vividchalk
 " colorscheme vividchalk 
 
+let mapleader = "º"             " Use º as leader
+
 " Tab mappings.
 map <leader>tt :tabnew<cr>
 map <leader>te :tabedit
@@ -69,6 +71,16 @@ vmap <C-j> ]egv
 
 " Uncomment to use Jamis Buck's file opening plugin
 map <Leader>t :FuzzyFinderTextMate<Enter>
+nmap <C-S-T> <Leader>t
+
+map <leader>e <leader>be
+
+nmap <leader>v :tabedit $MYVIMRC<CR>   " create a shortcut to :edit $MYVIMRC
+
+" Source the vimrc file after saving it
+if has("autocmd")
+  autocmd bufwritepost .vimrc source $MYVIMRC
+endif
 
 " Controversial...swap colon and semicolon for easier commands
 "nnoremap ; :
@@ -81,12 +93,4 @@ map <Leader>t :FuzzyFinderTextMate<Enter>
 " autocmd FileType ruby setlocal foldmethod=syntax
 " autocmd FileType css  setlocal foldmethod=indent shiftwidth=2 tabstop=2
 
-" Source the vimrc file after saving it
-if has("autocmd")
-  autocmd bufwritepost .vimrc source $MYVIMRC
-endif
-
-" create a shortcut to :edit $MYVIMRC
-" let mapleader = ","
-" nmap <leader>v :tabedit $MYVIMRC<CR>
 
