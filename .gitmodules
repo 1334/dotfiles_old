@@ -38,3 +38,6 @@
 	path = zsh/oh-my-zsh
 	url = https://github.com/robbyrussell/oh-my-zsh.git
   igonre = dirty
+[submodule "vim/bundle/fuzzy_finder"]
+	path = vim/bundle/fuzzy_finder
+	url = https://github.com/vim-scripts/FuzzyFinder.git
