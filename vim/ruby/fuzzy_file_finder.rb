@@ -33,6 +33,9 @@
 # * test/(app)/(blog)_(con)troller_test.rb
 #
 # And so forth.
+
+require 'cgi'
+
 class FuzzyFileFinder
   module Version
     MAJOR = 1
@@ -60,33 +63,27 @@ class FuzzyFileFinder
     end
   end
 
+  # Just like CharacterRun except outputs HTML.
+  class HtmlCharacterRun < Struct.new(:string, :inside) #:nodoc:
+    def to_s
+      if inside
+        "<span class=\"fuzzyff_match\">#{CGI.escapeHTML(string)}</span>"
+      else
+        CGI.escapeHTML(string)
+      end
+    end
+  end
+
   # Used internally to represent a file within the directory tree.
   class FileSystemEntry #:nodoc:
     attr_reader :parent
     attr_reader :name
+    attr_reader :path
 
-    def initialize(parent, name)
+    def initialize(parent, name, path)
       @parent = parent
       @name = name
-    end
-
-    def path
-      File.join(parent.name, name)
-    end
-  end
-
-  # Used internally to represent a subdirectory within the directory
-  # tree.
-  class Directory #:nodoc:
-    attr_reader :name
-
-    def initialize(name, is_root=false)
-      @name = name
-      @is_root = is_root
-    end
-
-    def root?
-      is_root
+      @path = path
     end
   end
 
@@ -105,25 +102,38 @@ class FuzzyFileFinder
   # The list of glob patterns to ignore.
   attr_reader :ignores
 
+  # The class used to output the highlighted text in the desired format.
+  attr_reader :highlighted_match_class
+
   # Initializes a new FuzzyFileFinder. This will scan the
   # given +directories+, using +ceiling+ as the maximum number
   # of entries to scan. If there are more than +ceiling+ entries
   # a TooManyEntries exception will be raised.
-  def initialize(directories=['.'], ceiling=10_000, ignores=nil)
+  def initialize(directories=['.'], ceiling=10_000, ignores=nil, highlighter=CharacterRun)
     directories = Array(directories)
     directories << "." if directories.empty?
 
     # expand any paths with ~
-    root_dirnames = directories.map { |d| File.expand_path(d) }.select { |d| File.directory?(d) }.uniq
+    @roots = directories.map { |d| File.expand_path(d) }.select { |d| File.directory?(d) }.uniq
 
-    @roots = root_dirnames.map { |d| Directory.new(d, true) }
-    @shared_prefix = determine_shared_prefix
-    @shared_prefix_re = Regexp.new("^#{Regexp.escape(shared_prefix)}" + (shared_prefix.empty? ? "" : "/"))
+    @shared_prefix = determine_shared_prefix.length
+    if @shared_prefix > 0
+      @shared_prefix += 1
+    end
 
     @files = []
+    @cache = {}
     @ceiling = ceiling
 
-    @ignores = Array(ignores)
+    # change ignores to a regexp
+    if ignores != nil
+      globs = split_globs(ignores)
+      @ignores = Regexp.union(globs.map {|s| glob_to_pattern(s)})
+    else
+      @ignores = /.*/
+    end
+
+    @highlighted_match_class = highlighter
 
     rescan!
   end
@@ -133,6 +143,7 @@ class FuzzyFileFinder
   # the changes.
   def rescan!
     @files.clear
+    @cache.clear
     roots.each { |root| follow_tree(root) }
   end
 
@@ -197,17 +208,21 @@ class FuzzyFileFinder
   # described in #search), and returns up to +max+ matches in an
   # Array. If +max+ is nil, all matches will be returned.
   def find(pattern, max=nil)
-    results = []
-    search(pattern) do |match|
-      results << match
-      break if max && results.length >= max
+    results = @cache[pattern]
+    if results == nil
+        results = []
+        search(pattern) do |match|
+          results << match
+          break if max && results.length >= max
+        end
+        @cache[pattern] = results
     end
     return results
   end
 
   # Displays the finder object in a sane, non-explosive manner.
   def inspect #:nodoc:
-    "#<%s:0x%x roots=%s, files=%d>" % [self.class.name, object_id, roots.map { |r| r.name.inspect }.join(", "), files.length]
+    "#<%s:0x%x roots=%s, files=%d>" % [self.class.name, object_id, roots.map { |r| r.inspect }.join(", "), files.length]
   end
 
   private
@@ -215,25 +230,18 @@ class FuzzyFileFinder
     # Recursively scans +directory+ and all files and subdirectories
     # beneath it, depth-first.
     def follow_tree(directory)
-      Dir.entries(directory.name).each do |entry|
+      Dir.entries(directory).each do |entry|
         next if entry[0,1] == "."
-        next if ignore?(directory.name) # Ignore whole directory hierarchies
-        raise TooManyEntries if files.length > ceiling
 
-        full = File.join(directory.name, entry)
+        full = File.join(directory, entry)
 
-        if File.directory?(full)
-          follow_tree(Directory.new(full))
-        elsif !ignore?(full.sub(@shared_prefix_re, ""))
-          files.push(FileSystemEntry.new(directory, entry))
+        if File.directory?(full) && File.readable?(full)
+          follow_tree(full)
+        elsif !@ignores.match(full[@shared_prefix..-1])
+          files.push(FileSystemEntry.new(directory, entry, full))
+          raise TooManyEntries if files.length > ceiling
         end
       end
-    end
-
-    # Returns +true+ if the given name matches any of the ignore
-    # patterns.
-    def ignore?(name)
-      ignores.any? { |pattern| File.fnmatch(pattern, name) }
     end
 
     # Takes the given pattern string "foo" and converts it to a new
@@ -249,6 +257,74 @@ class FuzzyFileFinder
       end
     end
 
+    # Takes a string of globs and splits them into an array
+    def split_globs(s)
+      globs = []
+      start = 0
+      offset = 0
+      braces = 0
+      loop {
+        i = s.index(/[:,{}]/, offset)
+
+        if i == nil
+          globs.push(s[start..-1])
+          break
+        end
+
+        if s[i].ord == '{'[0].ord
+          braces += 1
+        elsif s[i].ord == '}'[0].ord
+          braces -= 1
+        end
+
+        offset = i + 1
+
+        if braces == 0 &&
+          (s[i].ord == ":"[0].ord || s[i].ord == ","[0].ord)
+
+          if start < (i-1)
+            globs.push(s[start..i-1])
+          end
+
+          start = offset
+        end
+      }
+      globs
+    end
+
+    # Takes a glob and turns it into a regexp pattern.
+    def glob_to_pattern(s)
+      r = ['^']
+      curlies = 0
+      escaped = false
+      s.each_char {|c|
+        if ".()|+^$@%".include?(c)
+          r.push("\\#{c}")
+        elsif c == '*'
+          r.push(escaped ? "\\*" : ".*")
+        elsif c == '?'
+          r.push(escaped ? "\\." : ".")
+        elsif c == '{'
+          r.push(escaped ? "\\{" : "(")
+          curlies += 1 unless escaped
+        elsif c == '}' && curlies > 0
+          r.push(escaped ? "\\}" : ")")
+          curlies -= 1 unless escaped
+        elsif c == ',' && curlies > 0
+          r.push(escaped ? "," : "|")
+        elsif c == '\\'
+          r.push("\\\\") if escaped
+          escaped = !escaped
+          next
+        else
+          r.push(c)
+        end
+        escaped = false
+      }
+      r.push('$')
+      Regexp.new(r * "")
+    end
+
     # Given a MatchData object +match+ and a number of "inside"
     # segments to support, compute both the match score and  the
     # highlighted match string. The "inside segments" refers to how
@@ -258,6 +334,7 @@ class FuzzyFileFinder
     def build_match_result(match, inside_segments)
       runs = []
       inside_chars = total_chars = 0
+      is_word_prefixes = inside_segments == 1
       match.captures.each_with_index do |capture, index|
         if capture.length > 0
           # odd-numbered captures are matches inside the pattern.
@@ -270,7 +347,13 @@ class FuzzyFileFinder
           if runs.last && runs.last.inside == inside
             runs.last.string << capture
           else
-            runs << CharacterRun.new(capture, inside)
+            runs << @highlighted_match_class.new(capture, inside)
+          end
+
+          if !inside && is_word_prefixes && index != match.captures.length - 1
+            if capture.match(/[A-Za-z]$/i) #if this inbetween item finishes with a letter, the next is not an initial letter
+              is_word_prefixes = false
+            end
           end
         end
       end
@@ -287,7 +370,7 @@ class FuzzyFileFinder
 
       score = run_ratio * char_ratio
 
-      return { :score => score, :result => runs.join }
+      return { :score => score, :result => runs.join, :is_word_start_match => is_word_prefixes }
     end
 
     # Match the given path against the regex, caching the result in +path_matches+.
@@ -296,8 +379,8 @@ class FuzzyFileFinder
     def match_path(path, path_matches, path_regex, path_segments)
       return path_matches[path] if path_matches.key?(path)
 
-      name_with_slash = path.name + "/" # add a trailing slash for matching the prefix
-      matchable_name = name_with_slash.sub(@shared_prefix_re, "")
+      name_with_slash = path + "/" # add a trailing slash for matching the prefix
+      matchable_name = name_with_slash[@shared_prefix..-1]
       matchable_name.chop! # kill the trailing slash
 
       if path_regex
@@ -319,15 +402,16 @@ class FuzzyFileFinder
         full_match_result = path_match[:result].empty? ? match_result[:result] : File.join(path_match[:result], match_result[:result])
         shortened_path = path_match[:result].gsub(/[^\/]+/) { |m| m.index("(") ? m : m[0,1] }
         abbr = shortened_path.empty? ? match_result[:result] : File.join(shortened_path, match_result[:result])
+        plain_score = (path_match[:score] * match_result[:score]) / 2.0
 
         result = { :path => file.path,
                    :abbr => abbr,
-                   :directory => file.parent.name,
+                   :directory => file.parent,
                    :name => file.name,
                    :highlighted_directory => path_match[:result],
                    :highlighted_name => match_result[:result],
                    :highlighted_path => full_match_result,
-                   :score => path_match[:score] * match_result[:score] }
+                   :score => (match_result[:is_word_start_match] ? 0.5 : 0) + plain_score }
         yield result
       end
     end
@@ -335,9 +419,9 @@ class FuzzyFileFinder
     def determine_shared_prefix
       # the common case: if there is only a single root, then the entire
       # name of the root is the shared prefix.
-      return roots.first.name if roots.length == 1
+      return roots.first if roots.length == 1
 
-      split_roots = roots.map { |root| root.name.split(%r{/}) }
+      split_roots = roots.map { |root| root.split(%r{/}) }
       segments = split_roots.map { |root| root.length }.max
       master = split_roots.pop
 
@@ -349,6 +433,7 @@ class FuzzyFileFinder
 
       # shouldn't ever get here, since we uniq the root list before
       # calling this method, but if we do, somehow...
-      return roots.first.name
+      return roots.first
     end
 end
+
