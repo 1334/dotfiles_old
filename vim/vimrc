@@ -86,6 +86,10 @@ if has("autocmd")
   autocmd bufwritepost .vimrc source $MYVIMRC
 endif
 
+" map .less to .css for vim-less
+nnoremap ,m :w <BAR> !lessc % > %:t:r.css<CR><space>
+
+
 " Controversial...swap colon and semicolon for easier commands
 "nnoremap ; :
 "nnoremap : ;
