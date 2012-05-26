@@ -40,13 +40,12 @@ set directory=$HOME/.vim/tmp//,.  " Keep swap files in one location
 set tags=tags
 set tags+=$HOME/developer/_reference/sources/rails
 
-
-" UNCOMMENT TO USE
 set tabstop=2                    " Global tab width.
 set shiftwidth=2                 " And again, related.
 set expandtab                    " Use spaces instead of tabs
 
 set laststatus=2                  " Show the status line all the time
+
 " Useful status information at bottom of screen
 set statusline=[%n]\ %<%.99f\ %h%w%m%r%y\ %{exists('*CapsLockStatusline')?CapsLockStatusline():''}%=%-16(\ %l,%c-%v\ %)%P
 
@@ -101,5 +100,6 @@ nnoremap ,m :w <BAR> !lessc % > %:t:r.css<CR><space>
 " autocmd FileType ruby setlocal foldmethod=syntax
 " autocmd FileType css  setlocal foldmethod=indent shiftwidth=2 tabstop=2
 
-map <F5> <Esc>:w<CR>:!clear<CR>:!%:p<CR>
+" map <F5> <Esc>:w<CR>:!clear<CR>:!%:p<CR>
 
+autocmd FileType ruby map <F5> <Esc>:w<CR>:!clear<CR>:!ruby %<CR>
