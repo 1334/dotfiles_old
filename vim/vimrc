@@ -51,6 +51,10 @@ set statusline=[%n]\ %<%.99f\ %h%w%m%r%y\ %{exists('*CapsLockStatusline')?CapsLo
 
 " Or use vividchalk
 colorscheme grb256 
+set background=dark
+" set t_Co=256 " 256 colors
+" set background=dark
+" color grb256"
 
 let mapleader = ","             " Use , as leader
 
