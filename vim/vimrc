@@ -50,9 +50,9 @@ set laststatus=2                  " Show the status line all the time
 set statusline=[%n]\ %<%.99f\ %h%w%m%r%y\ %{exists('*CapsLockStatusline')?CapsLockStatusline():''}%=%-16(\ %l,%c-%v\ %)%P
 
 " Or use vividchalk
-" colorscheme vividchalk 
+colorscheme grb256 
 
-let mapleader = "º"             " Use º as leader
+let mapleader = ","             " Use , as leader
 
 " Tab mappings.
 map <leader>tt :tabnew<cr>
@@ -72,7 +72,7 @@ nmap <C-j> ]e
 vmap <C-k> [egv
 vmap <C-j> ]egv
 
-" Uncomment to use Jamis Buck's file opening plugin
+" Jamis Buck's file opening plugin
 map <Leader>t :FuzzyFinderTextMate<Enter>
 nmap <C-S-T> <Leader>t
 
@@ -84,6 +84,12 @@ nmap <leader>v :tabedit $MYVIMRC<CR>   " create a shortcut to :edit $MYVIMRC
 if has("autocmd")
   autocmd bufwritepost .vimrc source $MYVIMRC
 endif
+
+" Jump to last cursor position unless it's invalid or in an event handler
+autocmd BufReadPost *
+  \ if line("'\"") > 0 && line("'\"") <= line("$") |
+  \   exe "normal g`\"" |
+  \ endif
 
 " map .less to .css for vim-less
 nnoremap ,m :w <BAR> !lessc % > %:t:r.css<CR><space>
@@ -103,3 +109,130 @@ nnoremap ,m :w <BAR> !lessc % > %:t:r.css<CR><space>
 " map <F5> <Esc>:w<CR>:!clear<CR>:!%:p<CR>
 
 autocmd FileType ruby map <F5> <Esc>:w<CR>:!clear<CR>:!ruby %<CR>
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" MULTIPURPOSE TAB KEY
+" Indent if we're at the beginning of a line. Else, do completion.
+" (from https://github.com/garybernhardt/dotfiles/blob/master/.vimrc)
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! InsertTabWrapper()
+    let col = col('.') - 1
+    if !col || getline('.')[col - 1] !~ '\k'
+        return "\<tab>"
+    else
+        return "\<c-p>"
+    endif
+endfunction
+inoremap <tab> <c-r>=InsertTabWrapper()<cr>
+inoremap <s-tab> <c-n>
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" RENAME CURRENT FILE 
+" (from https://github.com/garybernhardt/dotfiles/blob/master/.vimrc)
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! RenameFile()
+    let old_name = expand('%')
+    let new_name = input('New file name: ', expand('%'), 'file')
+    if new_name != '' && new_name != old_name
+        exec ':saveas ' . new_name
+        exec ':silent !rm ' . old_name
+        redraw!
+    endif
+endfunction
+map <leader>n :call RenameFile()<cr>
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" PROMOTE VARIABLE TO RSPEC LET
+" (from https://github.com/garybernhardt/dotfiles/blob/master/.vimrc)
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! PromoteToLet()
+  :normal! dd
+  " :exec '?^\s*it\>'
+  :normal! P
+  :.s/\(\w\+\) = \(.*\)$/let(:\1) { \2 }/
+  :normal ==
+endfunction
+:command! PromoteToLet :call PromoteToLet()
+:map <leader>p :PromoteToLet<cr>
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" RUNNING TESTS
+" (from https://github.com/garybernhardt/dotfiles/blob/master/.vimrc)
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+map <leader>t :call RunTestFile()<cr>
+map <leader>T :call RunNearestTest()<cr>
+map <leader>a :call RunTests('')<cr>
+map <leader>c :w\|:!script/features<cr>
+map <leader>w :w\|:!script/features --profile wip<cr>
+
+function! RunTestFile(...)
+    if a:0
+        let command_suffix = a:1
+    else
+        let command_suffix = ""
+    endif
+
+    " Run the tests for the previously-marked file.
+    let in_test_file = match(expand("%"), '\(.feature\|_spec.rb\)$') != -1
+    if in_test_file
+        call SetTestFile()
+    elseif !exists("t:grb_test_file")
+        return
+    end
+    call RunTests(t:grb_test_file . command_suffix)
+endfunction
+
+function! RunNearestTest()
+    let spec_line_number = line('.')
+    call RunTestFile(":" . spec_line_number . " -b")
+endfunction
+
+function! SetTestFile()
+    " Set the spec file that tests will be run for.
+    let t:grb_test_file=@%
+endfunction
+
+function! RunTests(filename)
+    " Write the file and run tests for the given filename
+    :w
+    :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
+    :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
+    :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
+    :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
+    :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
+    :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
+    if match(a:filename, '\.feature$') != -1
+        exec ":!script/features " . a:filename
+    else
+        if filereadable("script/test")
+            exec ":!script/test " . a:filename
+        elseif filereadable("Gemfile")
+            exec ":!bundle exec rspec --color " . a:filename
+        else
+            exec ":!rspec --color " . a:filename
+        end
+    end
+endfunction
+
+
+" Leader shortcuts for Rails commands
+" https://github.com/ryanb/dotfiles/blob/master/vimrc
+
+map <Leader>m :Rmodel 
+map <Leader>c :Rcontroller 
+map <Leader>v :Rview 
+map <Leader>u :Runittest 
+map <Leader>f :Rfunctionaltest 
+map <Leader>tm :RTmodel 
+map <Leader>tc :RTcontroller 
+map <Leader>tv :RTview 
+map <Leader>tu :RTunittest 
+map <Leader>tf :RTfunctionaltest 
+map <Leader>sm :RSmodel 
+map <Leader>sc :RScontroller 
+map <Leader>sv :RSview 
+map <Leader>su :RSunittest 
+map <Leader>sf :RSfunctionaltest 
+
