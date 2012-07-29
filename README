@@ -1,19 +1,18 @@
 # Install plugins as submodules
-cd ~/bin/dotfiles
+cd ~/.dotfiles
 git submodule add https://github.com/user/plugin_name.git vim/bundle/plugin_name
 git add .
 git commit -m "Install vim bundle as a submodule"
 
 # Install dotfiles environment
-cd ~/bin
-git clone https://1334@github.com/1334/dotfiles.git 
-ln -s ~/bin/dotfiles/vim ~/.vim
-ln -s ~/bin/dotfiles/vim/vimrc ~/.vimrc
-ln -s ~/bin/dotfiles/vim/gvimrc ~/.gvimrc
-cd ~/bin/dotfiles
+git clone https://1334@github.com/1334/dotfiles.git .dotfiles
+ln -s ~/.dotfiles/vim ~/.vim
+ln -s ~/.dotfiles/vim/vimrc ~/.vimrc
+ln -s ~/.dotfiles/vim/gvimrc ~/.gvimrc
+cd ~/.dotfiles
 git submodule init
 git submodule update
 
 # Upgrade all bundled plugins
-cd ~/bin/dotfiles
+cd ~/.dotfiles
 git submodule foreach git pull origin master
