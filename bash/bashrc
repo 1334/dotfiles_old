@@ -1,0 +1,8 @@
+# path var
+export PATH=/usr/local/bin:~/.dotfiles/scripts:$PATH
+
+# custom prompt
+export PS1='\W$(vcprompt -f " [%P:%b%m]" -M "*") $ '
+
+# needed by rbenv
+eval "$(rbenv init -)"
