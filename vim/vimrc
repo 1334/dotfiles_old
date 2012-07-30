@@ -77,8 +77,8 @@ vmap <C-k> [egv
 vmap <C-j> ]egv
 
 " Jamis Buck's file opening plugin
-map <Leader>t :FuzzyFinderTextMate<Enter>
-nmap <C-S-T> <Leader>t
+" map <Leader>t :FuzzyFinderTextMate<Enter>
+" nmap <C-S-T> <Leader>t
 
 map <leader>e <leader>be
 
