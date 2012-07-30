@@ -52,6 +52,7 @@ function setup_bash()
 {
   ln -si ~/.dotfiles/bash/bashrc ~/.bashrc
   ln -si ~/.dotfiles/bash/bash_profile ~/.bash_profile
+  source ~/.bash_profile
 }
 
 function setup_gitsubs()
@@ -88,3 +89,5 @@ if [ $? -eq 0 ]
 then
 	setup_gitsubs
 fi
+
+
