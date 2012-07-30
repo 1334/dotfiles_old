@@ -5,6 +5,12 @@ function verify_dependencies()
     echo "You need git installed in order to proceed" 
     exit 2
   fi
+
+  if [ -d ~/.dotfiles ]; then
+    echo ".dotfiles already exists"
+    echo "delete it to reinstall or run scripts/update.sh"
+    exit 1
+  fi
 }
 
 function ask_to()
