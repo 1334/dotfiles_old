@@ -38,3 +38,19 @@
 	path = vim/bundle/vim-commentary
 	url = git://github.com/tpope/vim-commentary.git
 	igonre = dirty
+[submodule "vim/bundle/vim-snipmate"]
+	path = vim/bundle/vim-snipmate
+	url = git://github.com/garbas/vim-snipmate.git
+	igonre = dirty
+[submodule "vim/bundle/tlib_vim"]
+	path = vim/bundle/tlib_vim
+	url = https://github.com/tomtom/tlib_vim.git
+	igonre = dirty
+[submodule "vim/bundle/vim-addon-mw-utils"]
+	path = vim/bundle/vim-addon-mw-utils
+	url = https://github.com/MarcWeber/vim-addon-mw-utils.git
+	igonre = dirty
+[submodule "vim/bundle/snipmate-snippets"]
+	path = vim/bundle/snipmate-snippets
+	url = https://github.com/honza/snipmate-snippets.git
+	igonre = dirty
