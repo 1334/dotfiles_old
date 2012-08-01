@@ -6,10 +6,8 @@ function verify_dependencies()
     exit 2
   fi
 
-  if [ -d ~/.dotfiles ]; then
-    echo ".dotfiles already exists"
-    echo "delete it to reinstall or run scripts/update.sh"
-    exit 1
+  if ! [ -d ~/.dotfiles ]; then
+    clone_repo
   fi
 }
 
@@ -76,7 +74,6 @@ function clone_repo()
 
 verify_dependencies
 
-clone_repo
 
 ask_to 'install Bash'
 if [ $? -eq 0 ]
