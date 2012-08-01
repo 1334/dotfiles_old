@@ -38,7 +38,3 @@
 	path = vim/bundle/vim-commentary
 	url = git://github.com/tpope/vim-commentary.git
 	igonre = dirty
-[submodule "vim/bundle/xtemplate"]
-	path = vim/bundle/xtemplate
-	url = https://github.com/vim-scripts/xptemplate.git
-	igonre = dirty
