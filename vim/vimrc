@@ -1,5 +1,8 @@
 call pathogen#infect()            " Autoload plubins in .vim/bundle with Pathogen.vim
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" BASIC EDITING CONFIGURATION
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set nocompatible                  " Must come first because it changes other options.
 
 syntax enable                     " Turn on syntax highlighting.
@@ -13,6 +16,8 @@ set showmode                      " Display the mode you're in.
 set backspace=indent,eol,start    " Intuitive backspacing.
 
 set hidden                        " Handle multiple buffers better.
+
+set history=10000                 " remember more commands and search history
 
 set wildmenu                      " Enhanced command line completion.
 set wildmode=list:longest         " Complete files like a shell.
@@ -44,17 +49,30 @@ set tabstop=2                    " Global tab width.
 set shiftwidth=2                 " And again, related.
 set expandtab                    " Use spaces instead of tabs
 
+set autoindent
+
 set laststatus=2                  " Show the status line all the time
+
+set exrc                          " enable per-directory .vimrc files
+set secure                        " disable unsafe commands in local .vimrc files
 
 " Useful status information at bottom of screen
 set statusline=[%n]\ %<%.99f\ %h%w%m%r%y\ %{exists('*CapsLockStatusline')?CapsLockStatusline():''}%=%-16(\ %l,%c-%v\ %)%P
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" ARROW KEYS ARE UNACCEPTABLE
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+map <Left> <Nop>
+map <Right> <Nop>
+map <Up> <Nop>
+map <Down> <Nop>
+
 " Or use vividchalk
 " colorscheme vividchalk 
+colorscheme macvim
 " set background=light
-" set t_Co=256 " 256 colors
-" set background=dark
-" color grb256"
+" :set background=dark
+" :color grb256
 
 let mapleader = ","             " Use , as leader
 
@@ -75,6 +93,9 @@ nmap <C-j> ]e
 
 vmap <C-k> [egv
 vmap <C-j> ]egv
+
+" Map <c-p> to to º in insert mode
+imap º <c-p>
 
 " Jamis Buck's file opening plugin
 " map <Leader>t :FuzzyFinderTextMate<Enter>
@@ -119,14 +140,14 @@ autocmd FileType ruby map <F5> <Esc>:w<CR>:!clear<CR>:!ruby %<CR>
 " Indent if we're at the beginning of a line. Else, do completion.
 " (from https://github.com/garybernhardt/dotfiles/blob/master/.vimrc)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! InsertTabWrapper()
-    let col = col('.') - 1
-    if !col || getline('.')[col - 1] !~ '\k'
-        return "\<tab>"
-    else
-        return "\<c-p>"
-    endif
-endfunction
+" function! InsertTabWrapper()
+"     let col = col('.') - 1
+"     if !col || getline('.')[col - 1] !~ '\k'
+"         return "\<tab>"
+"       else
+"         return "\<c-p>"
+"     endif
+" endfunction
 " inoremap <tab> <c-r>=InsertTabWrapper()<cr>
 " inoremap <s-tab> <c-n>
 
@@ -220,6 +241,14 @@ function! RunTests(filename)
     end
 endfunction
 
+" Show syntax highlighting groups for word under cursor
+nmap <leader>h :call <SID>SynStack()<CR>
+function! <SID>SynStack()
+  if !exists("*synstack")
+    return
+  endif
+  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc
 
 " Leader shortcuts for Rails commands
 " https://github.com/ryanb/dotfiles/blob/master/vimrc
