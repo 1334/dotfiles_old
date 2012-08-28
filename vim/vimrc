@@ -69,7 +69,7 @@ map <Down> <Nop>
 
 " Or use vividchalk
 " colorscheme vividchalk 
-colorscheme macvim
+" colorscheme macvim
 " set background=light
 " :set background=dark
 " :color grb256
