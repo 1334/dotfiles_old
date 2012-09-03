@@ -87,6 +87,8 @@ map <leader>tf :tabfirst<cr>
 map <leader>tl :tablast<cr>
 map <leader>tm :tabmove
 
+map <leader>ç <C-^>
+
 " remapping unimpaired.vim exchange commands to new shortcuts
 nmap <C-k> [e
 nmap <C-j> ]e
