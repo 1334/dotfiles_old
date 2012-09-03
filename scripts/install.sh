@@ -59,6 +59,12 @@ function setup_bash()
   source ~/.bash_profile
 }
 
+function setup_git()
+{
+  ln -si ~/.dotfiles/git/gitignore_global ~/.gitignore_global
+  git config --global core.excludesfile ~/.gitignore_global
+}
+
 function setup_gitsubs()
 {
   cd ~/.dotfiles
@@ -87,6 +93,11 @@ then
 	setup_vim
 fi
 
+ask_to 'configure global gitignore'
+if [ $? -eq 0 ]
+then
+	setup_git
+fi
 ask_to 'install git submodules'
 if [ $? -eq 0 ]
 then
