@@ -138,6 +138,9 @@ nnoremap ,m :w <BAR> !lessc % > %:t:r.css<CR><space>
 
 autocmd FileType ruby map <F5> <Esc>:w<CR>:!clear<CR>:!ruby %<CR>
 
+" associate md extesion to markdown instead of modula2"
+au BufRead,BufNewFile *.md set filetype=markdown
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " MULTIPURPOSE TAB KEY
 " Indent if we're at the beginning of a line. Else, do completion.
