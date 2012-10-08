@@ -5,4 +5,5 @@ export PATH=/usr/local/bin:~/.dotfiles/scripts:~/.rbenv/bin:$PATH
 export PS1='[\u@\h \W$(vcprompt -f " (%b%m)" -M "*")]$ '
 
 # needed by rbenv
+export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
