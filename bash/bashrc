@@ -7,3 +7,6 @@ export PS1='[\u@\h \W$(vcprompt -f " (%b%m)" -M "*")]$ '
 # needed by rbenv
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
+
+# use vi-mode
+set -o vi
