@@ -67,7 +67,8 @@ let g:spellfile_URL = 'http://ftp.vim.org/vim/runtime/spell'
 
 " map :W to :w
 command! W :w
-set winwidth=90
+
+set winwidth=85
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ARROW KEYS ARE UNACCEPTABLE
@@ -117,6 +118,9 @@ imap º <c-p>
 map <leader>e <leader>be
 
 nmap <leader>v :tabedit $MYVIMRC<CR>   " create a shortcut to :edit $MYVIMRC
+
+" map space to iterate buffer windows
+nmap <space> <c-w>w
 
 " Source the vimrc file after saving it
 if has("autocmd")
