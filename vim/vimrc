@@ -62,15 +62,12 @@ set statusline=[%n]\ %<%.99f\ %h%w%m%r%y\ %{exists('*CapsLockStatusline')?CapsLo
 " hide the toolbar in gui mode
 set guioptions-=T
 
-<<<<<<< HEAD
 " let vim download dictionary files when needed
 let g:spellfile_URL = 'http://ftp.vim.org/vim/runtime/spell'
 
 " map :W to :w
 command! W :w
-=======
 set winwidth=90
->>>>>>> 039e57575f143d33d0e6f678bc1103d47049316a
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ARROW KEYS ARE UNACCEPTABLE
