@@ -73,10 +73,10 @@ set winwidth=85
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ARROW KEYS ARE UNACCEPTABLE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-map <Left> <Nop>
-map <Right> <Nop>
-map <Up> <Nop>
-map <Down> <Nop>
+noremap <Left> <Nop>
+noremap <Right> <Nop>
+noremap <Up> <Nop>
+noremap <Down> <Nop>
 
 " Or use vividchalk
 " colorscheme vividchalk 
@@ -88,39 +88,39 @@ map <Down> <Nop>
 let mapleader = ","             " Use , as leader
 
 " Tab mappings.
-map <leader>tt :tabnew<cr>
-map <leader>te :tabedit
-map <leader>tc :tabclose<cr>
-map <leader>to :tabonly<cr>
-map <leader>tn :tabnext<cr>
-map <leader>tp :tabprevious<cr>
-map <leader>tf :tabfirst<cr>
-map <leader>tl :tablast<cr>
-map <leader>tm :tabmove
+noremap <leader>tt :tabnew<cr>
+noremap <leader>te :tabedit
+noremap <leader>tc :tabclose<cr>
+noremap <leader>to :tabonly<cr>
+noremap <leader>tn :tabnext<cr>
+noremap <leader>tp :tabprevious<cr>
+noremap <leader>tf :tabfirst<cr>
+noremap <leader>tl :tablast<cr>
+noremap <leader>tm :tabmove
 
 nnoremap <Left> :bprevious<CR>
 nnoremap <Right> :bnext<CR>
 
 " remapping unimpaired.vim exchange commands to new shortcuts
-nmap <C-k> [e
-nmap <C-j> ]e
+nnoremap <C-k> [e
+nnoremap <C-j> ]e
 
-vmap <C-k> [egv
-vmap <C-j> ]egv
+vnoremap <C-k> [egv
+vnoremap <C-j> ]egv
 
 " Map <c-p> to to º in insert mode
-imap º <c-p>
+inoremap º <c-p>
 
 " Jamis Buck's file opening plugin
 " map <Leader>t :FuzzyFinderTextMate<Enter>
 " nmap <C-S-T> <Leader>t
 
-map <leader>e <leader>be
+noremap <leader>e <leader>be
 
-nmap <leader>v :tabedit $MYVIMRC<CR>   " create a shortcut to :edit $MYVIMRC
+nnoremap <leader>v :tabedit $MYVIMRC<CR>   " create a shortcut to :edit $MYVIMRC
 
 " map space to iterate buffer windows
-nmap <space> <c-w>w
+nnoremap <space> <c-w>w
 
 " Source the vimrc file after saving it
 if has("autocmd")
@@ -184,17 +184,17 @@ function! RenameFile()
         redraw!
     endif
 endfunction
-map <leader>n :call RenameFile()<cr>
+noremap <leader>n :call RenameFile()<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " RUNNING TESTS
 " (from https://github.com/garybernhardt/dotfiles/blob/master/.vimrc)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-map <leader>t :call RunTestFile()<cr>
-map <leader>T :call RunNearestTest()<cr>
-map <leader>a :call RunTests('')<cr>
-map <leader>c :w\|:!script/features<cr>
-map <leader>w :w\|:!script/features --profile wip<cr>
+noremap <leader>t :call RunTestFile()<cr>
+noremap <leader>T :call RunNearestTest()<cr>
+noremap <leader>a :call RunTests('')<cr>
+noremap <leader>c :w\|:!script/features<cr>
+noremap <leader>w :w\|:!script/features --profile wip<cr>
 
 function! RunTestFile(...)
     if a:0
@@ -246,7 +246,7 @@ function! RunTests(filename)
 endfunction
 
 " Show syntax highlighting groups for word under cursor
-nmap <leader>h :call <SID>SynStack()<CR>
+nnoremap <leader>h :call <SID>SynStack()<CR>
 function! <SID>SynStack()
   if !exists("*synstack")
     return
@@ -257,20 +257,20 @@ endfunc
 " Leader shortcuts for Rails commands
 " https://github.com/ryanb/dotfiles/blob/master/vimrc
 
-map <Leader>m :Rmodel 
-map <Leader>c :Rcontroller 
-map <Leader>v :Rview 
-map <Leader>u :Runittest 
-map <Leader>f :Rfunctionaltest 
-map <Leader>tm :RTmodel 
-map <Leader>tc :RTcontroller 
-map <Leader>tv :RTview 
-map <Leader>tu :RTunittest 
-map <Leader>tf :RTfunctionaltest 
-map <Leader>sm :RSmodel 
-map <Leader>sc :RScontroller 
-map <Leader>sv :RSview 
-map <Leader>su :RSunittest 
-map <Leader>sf :RSfunctionaltest 
+noremap <Leader>m :Rmodel 
+noremap <Leader>c :Rcontroller 
+noremap <Leader>v :Rview 
+noremap <Leader>u :Runittest 
+noremap <Leader>f :Rfunctionaltest 
+noremap <Leader>tm :RTmodel 
+noremap <Leader>tc :RTcontroller 
+noremap <Leader>tv :RTview 
+noremap <Leader>tu :RTunittest 
+noremap <Leader>tf :RTfunctionaltest 
+noremap <Leader>sm :RSmodel 
+noremap <Leader>sc :RScontroller 
+noremap <Leader>sv :RSview 
+noremap <Leader>su :RSunittest 
+noremap <Leader>sf :RSfunctionaltest 
 
-map <leader>3 <c-\>s
+noremap <leader>3 <c-\>s
