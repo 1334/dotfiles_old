@@ -62,6 +62,7 @@ function setup_bash()
 function setup_git()
 {
   ln -si ~/.dotfiles/git/gitignore_global ~/.gitignore_global
+  ln -si ~/.dotfiles/git/gitconfig ~/.gitconfig
   git config --global core.excludesfile ~/.gitignore_global
 }
 

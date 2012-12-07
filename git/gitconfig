@@ -1,0 +1,21 @@
+[user]
+	name = 1334
+	email = 1334@shadowproject.net
+
+[core]
+	excludesfile = ~/.gitignore_global
+
+[push]
+	default = simple
+
+[alias]
+  co = checkout
+  cleanup = !git remote prune origin && git gc && git clean -df && git stash clear
+
+[color]
+  diff = auto
+  status = auto
+  branch = auto
+
+[github]
+  user = 1334
