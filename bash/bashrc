@@ -12,3 +12,7 @@ eval "$(rbenv init -)"
 set -o vi
 
 export EDITOR="vim"
+
+if [ -f ~/.heroku_env ]; then
+  source ~/.heroku_env
+fi
