@@ -101,6 +101,8 @@ noremap <leader>tm :tabmove
 nnoremap <Left> :bprevious<CR>
 nnoremap <Right> :bnext<CR>
 
+nnoremap <cr> :nohlsearch<cr>
+
 " remapping unimpaired.vim exchange commands to new shortcuts
 nnoremap <C-k> [e
 nnoremap <C-j> ]e
@@ -115,45 +117,37 @@ inoremap º <c-p>
 " map <Leader>t :FuzzyFinderTextMate<Enter>
 " nmap <C-S-T> <Leader>t
 
-noremap <leader>e <leader>be
-
-nnoremap <leader>v :tabedit $MYVIMRC<CR>   " create a shortcut to :edit $MYVIMRC
+noremap <leader>ev :vs $MYVIMRC<cr>
 
 " map space to iterate buffer windows
 nnoremap <space> <c-w>w
 
-" Source the vimrc file after saving it
-if has("autocmd")
+augroup vimrc_acmd
+  autocmd!
+  " Source the vimrc file after saving it
   autocmd bufwritepost .vimrc source $MYVIMRC
-endif
+  " Jump to last cursor position unless it's invalid or in an event handler
+  autocmd BufReadPost *
+        \ if line("'\"") > 0 && line("'\"") <= line("$") |
+        \   exe "normal g`\"" |
+        \ endif
+augroup END
 
-" Jump to last cursor position unless it's invalid or in an event handler
-autocmd BufReadPost *
-  \ if line("'\"") > 0 && line("'\"") <= line("$") |
-  \   exe "normal g`\"" |
-  \ endif
-
-" map .less to .css for vim-less
-nnoremap ,m :w <BAR> !lessc % > %:t:r.css<CR><space>
-
-
-" Controversial...swap colon and semicolon for easier commands
-"nnoremap ; :
-"nnoremap : ;
-
-"vnoremap ; :
-"vnoremap : ;
 
 " Automatic fold settings for specific files. Uncomment to use.
 " autocmd FileType ruby setlocal foldmethod=syntax
 " autocmd FileType css  setlocal foldmethod=indent shiftwidth=2 tabstop=2
 
-" map <F5> <Esc>:w<CR>:!clear<CR>:!%:p<CR>
+augroup ruby_acmd
+  autocmd!
+  autocmd FileType ruby map <F5> <Esc>:w<CR>:!clear<CR>:!ruby %<CR>
+augroup END
 
-autocmd FileType ruby map <F5> <Esc>:w<CR>:!clear<CR>:!ruby %<CR>
-
-" associate md extesion to markdown instead of modula2"
-au BufRead,BufNewFile *.md set filetype=markdown
+augroup md_acmd
+  autocmd!
+  " associate md extesion to markdown instead of modula2"
+  au BufRead,BufNewFile *.md set filetype=markdown
+augroup END
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " MULTIPURPOSE TAB KEY
@@ -226,12 +220,12 @@ endfunction
 function! RunTests(filename)
     " Write the file and run tests for the given filename
     :w
-    :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
-    :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
-    :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
-    :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
-    :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
-    :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
+    :silent !clear
+    " :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo " :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
+    " :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
+    " :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
+    " :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
+    " :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
     if match(a:filename, '\.feature$') != -1
         exec ":!script/features " . a:filename
     else
@@ -244,6 +238,7 @@ function! RunTests(filename)
         end
     end
 endfunction
+
 
 " Show syntax highlighting groups for word under cursor
 nnoremap <leader>h :call <SID>SynStack()<CR>
