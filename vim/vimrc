@@ -252,7 +252,7 @@ endfunc
 noremap <Leader>m :Rmodel 
 noremap <Leader>c :Rcontroller 
 noremap <Leader>v :Rview 
-noremap <Leader>u :Runittest %<cr>
+noremap <Leader>u :Runittest 
 noremap <Leader>f :Rfunctionaltest 
 noremap <Leader>tm :RTmodel 
 noremap <Leader>tc :RTcontroller 

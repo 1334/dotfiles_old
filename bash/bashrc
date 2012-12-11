@@ -15,3 +15,6 @@ export EDITOR="vim"
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
+if [ -f ~/.heroku_env ]; then
+  source ~/.heroku_env
+fi
