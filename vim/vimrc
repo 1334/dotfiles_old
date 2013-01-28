@@ -103,6 +103,8 @@ nnoremap <Right> :bnext<CR>
 
 nnoremap <cr> :nohlsearch<cr>
 
+nnoremap <leader>i gg=G
+
 " remapping unimpaired.vim exchange commands to new shortcuts
 nnoremap <C-k> [e
 nnoremap <C-j> ]e
@@ -118,6 +120,7 @@ inoremap º <c-p>
 " nmap <C-S-T> <Leader>t
 
 noremap <leader>ev :vs $MYVIMRC<cr>
+noremap <leader>ss :vs ~/.vim/bundle/snipmate-snippets/snippets/<cr>
 
 " map space to iterate buffer windows
 nnoremap <space> <c-w>w
@@ -140,13 +143,13 @@ augroup END
 
 augroup ruby_acmd
   autocmd!
-  autocmd FileType ruby map <F5> <Esc>:w<CR>:!clear<CR>:!ruby %<CR>
+  autocmd FileType ruby map <leader>r <Esc>:w<CR>:!clear<CR>:!ruby %<CR>
 augroup END
 
 augroup md_acmd
   autocmd!
   " associate md extesion to markdown instead of modula2"
-  au BufRead,BufNewFile *.md set filetype=markdown
+  autocmd BufRead,BufNewFile *.md set filetype=markdown
 augroup END
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -254,11 +257,11 @@ noremap <Leader>c :Rcontroller
 noremap <Leader>v :Rview 
 noremap <Leader>u :Runittest 
 noremap <Leader>f :Rfunctionaltest 
-noremap <Leader>tm :RTmodel 
-noremap <Leader>tc :RTcontroller 
-noremap <Leader>tv :RTview 
-noremap <Leader>tu :RTunittest 
-noremap <Leader>tf :RTfunctionaltest 
+noremap <Leader>rm :RTmodel 
+noremap <Leader>rc :RTcontroller 
+noremap <Leader>rv :RTview 
+noremap <Leader>ru :RTunittest 
+noremap <Leader>rf :RTfunctionaltest 
 noremap <Leader>sm :RSmodel 
 noremap <Leader>sc :RScontroller 
 noremap <Leader>sv :RSview 
