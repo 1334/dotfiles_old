@@ -37,6 +37,11 @@ Icon?
 ehthumbs.db
 Thumbs.db
 
-# vim files
+# vim swap files #
+##################
 *.swp
 *.swo
+
+# Custom files #
+################
+project_notes.txt
