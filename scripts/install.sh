@@ -52,6 +52,11 @@ function setup_vim()
 	ln -si ~/.dotfiles/vim/gvimrc ~/.gvimrc
 }
 
+function setup_railsrc()
+{
+  ln -si ~/.dotfiles/railsrc ~/.railsrc
+}
+
 function setup_bash()
 {
   ln -si ~/.dotfiles/bash/bashrc ~/.bashrc
@@ -105,4 +110,8 @@ then
 	setup_gitsubs
 fi
 
-
+ask_to 'install railsrc'
+if [ $? -eq 0 ]
+then
+	setup_railsrc
+fi
