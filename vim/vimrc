@@ -120,7 +120,8 @@ inoremap º <c-p>
 " nmap <C-S-T> <Leader>t
 
 noremap <leader>ev :vs $MYVIMRC<cr>
-noremap <leader>ss :vs ~/.vim/bundle/snipmate-snippets/snippets/<cr>
+noremap <leader>ss :vs ~/.vim/bundle/vim-snippets/snippets/<cr>
+noremap <leader>p :split project_notes.txt<cr>
 
 " map space to iterate buffer windows
 nnoremap <space> <c-w>w
