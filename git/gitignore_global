@@ -45,3 +45,6 @@ Thumbs.db
 # Custom files #
 ################
 project_notes.txt
+
+#ctags file
+tags
