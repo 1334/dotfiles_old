@@ -72,6 +72,11 @@ command! W :w
 
 set winwidth=85
 
+" Always show tab bar
+set showtabline=2
+" show whitespace
+set list listchars=tab:\ \ ,trail:·"
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ARROW KEYS ARE UNACCEPTABLE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
